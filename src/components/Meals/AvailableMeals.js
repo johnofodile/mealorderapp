@@ -28,11 +28,15 @@ const DUMMY_MEALS = [
     price: 18.99,
   },
 ];
+//when we have an arry which we plan to cast, we always have to map get the structure we need
 
 const AvailableMeals = () => {
   const mealsList = DUMMY_MEALS.map((meal) => (
     <MealItem
+    //we have to set the id prop here since it is used in the context file 
+    //and also it is needed in the mealitem file
       key={meal.id}
+      id={meal.id}
       name={meal.name}
       description={meal.description}
       price={meal.price}
