@@ -13,6 +13,7 @@ const CartItem = (props) => {
         </div>
       </div>
       <div className={classes.actions}>
+      {/* on add props and onRemove props is connected to the cart.js component.That is where the action takes place */}
         <button onClick={props.onRemove}>−</button>
         <button onClick={props.onAdd}>+</button>
       </div>

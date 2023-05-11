@@ -12,8 +12,14 @@ const Cart = (props) => {
 
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)} `;
   const hasItems = cartCtx.items.length > 0;
-  const cartItemRemoveHandler = (id) => {};
-  const cartItemAddHandler = (item) => {};
+  //this will trigger the remove from cart functionality
+  const cartItemRemoveHandler = (id) => {
+    cartCtx.removeItem(id);
+  };
+  //this will trigger the add item function in the card provider component
+  const cartItemAddHandler = (item) => {
+    cartCtx.addItem(item)
+  };
 
   const cartItems = (
     <ul className={classes["cart-items"]}>
