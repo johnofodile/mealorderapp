@@ -1,37 +1,55 @@
 import classes from "./AvailableMeals.module.css";
 import Card from "../UI/Card";
 import MealItem from "./MealItem/MealItem";
+import { useEffect, useState } from "react";
 
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "Schnitzel",
-    description: "A german specialty!",
-    price: 16.5,
-  },
-  {
-    id: "m3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "m4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
+//now we fetch the data directly from firebase database
+
+
+
+
 //when we have an arry which we plan to cast, we always have to map get the structure we need
 
 const AvailableMeals = () => {
-  const mealsList = DUMMY_MEALS.map((meal) => (
+  //we should use state so that when component is rendered we can also see the available meals
+
+  const [meals, setMeals]=useState([]);
+//the function we pass to use effect should not return a promise.This fetch always returns a promise
+  useEffect(()=>{
+    //this is the only way we can use async when using useeffect.By this way, the function does not return a promise
+
+
+    const fetchMeals=async()=>{
+   const response=await fetch('https://http-2-ef582-default-rtdb.europe-west1.firebasedatabase.app/meals.json');
+   const responseData=await response.json();
+  
+
+  //the response data is an object and i want to convert it to an array of objects
+  //the array is initially empty and later it is fetched from firebase
+  //we use use effect and state to render the meals to the web page
+  const loadedMeals =[];
+
+  for(const key in responseData){
+    loadedMeals.push({
+      id: key,
+      name:responseData[key].name,
+      description:responseData[key].description,
+      price:responseData[key].price,
+      
+    });
+
+  }
+
+  setMeals(loadedMeals);
+
+
+    };
+
+  fetchMeals();
+  },[]);
+
+  
+  const mealsList = meals.map((meal) => (
     <MealItem
     //we have to set the id prop here since it is used in the context file 
     //and also it is needed in the mealitem file
