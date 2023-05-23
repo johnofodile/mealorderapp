@@ -1,13 +1,15 @@
 import classes from "./Cart.module.css";
 import Modal from "../UI/Modal";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import CartContext from "../../store/cart-context";
 import CartItem from "./CartItem";
+import Checkout from "./Checkout";
 
 //we import use context here too because we need to use the context here
 //when using the use context, we always have to import the cart context as well
 
 const Cart = (props) => {
+  const [isCheckout, setIsCheckout] = useState(false);
   const cartCtx = useContext(CartContext);
 
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)} `;
@@ -18,7 +20,11 @@ const Cart = (props) => {
   };
   //this will trigger the add item function in the card provider component
   const cartItemAddHandler = (item) => {
-    cartCtx.addItem(item)
+    cartCtx.addItem(item);
+  };
+
+  const orderHandler = () => {
+    setIsCheckout(true);
   };
 
   const cartItems = (
@@ -32,10 +38,23 @@ const Cart = (props) => {
           price={item.price}
           //we use bind so we can bind the id or item to perform the task
           onRemove={cartItemRemoveHandler.bind(null, item.id)}
-          onAdd={cartItemAddHandler.bind(null,item)}
+          onAdd={cartItemAddHandler.bind(null, item)}
         />
       ))}
     </ul>
+  );
+
+  const modalActions = (
+    <div className={classes.actions}>
+      <button className={classes["button--alt"]} onClick={props.onClose}>
+        Close
+      </button>
+      {hasItems && (
+        <button className={classes.button} onClick={orderHandler}>
+          Order
+        </button>
+      )}
+    </div>
   );
 
   return (
@@ -43,15 +62,11 @@ const Cart = (props) => {
       {cartItems}
       <div className={classes.total}>
         {/* <span>Total amount</span> intial dummy undynamic amount */}
+        <span>Total Amount</span>
         <span>{totalAmount}</span>
-        <span>35.62</span>
       </div>
-      <div className={classes.actions}>
-        <button className={classes["button--alt"]} onClick={props.onClose}>
-          Close
-        </button>
-        {hasItems && <button className={classes.button}>Order</button>}
-      </div>
+      {isCheckout && <Checkout onCancel={props.onClose}/>}
+      {!isCheckout && modalActions}
     </Modal>
   );
 };
