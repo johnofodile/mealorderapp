@@ -32,18 +32,12 @@ const Checkout = (props) => {
     const enteredCityIsValid = isFiveChars(enteredCity);
     //the form is valid if only all four conditions below are valid
 
-setFormInputValidity({
-    name:enteredNameIsValid,
-    street:enteredStreetIsValid,
-    postalCode:enteredPostalIsValid,
-    city:enteredCityIsValid,
-   
-
-});
-
-
-
-
+    setFormInputValidity({
+      name: enteredNameIsValid,
+      street: enteredStreetIsValid,
+      postalCode: enteredPostalIsValid,
+      city: enteredCityIsValid,
+    });
 
     const formIsValid =
       enteredNameIsValid &&
@@ -55,37 +49,58 @@ setFormInputValidity({
       //submit the cart data
       return;
     }
+    //here we use the onconfirm prop so that later we can succesfully send the values to the server
+    //the code only reaches down here if the form is valid otherwise it returns 
+    //all the values below were set using the references at thye beginning
+    props.onConfirm({
+      name: enteredName,
+      street:enteredStreet,
+      city:enteredCity,
+      postalCode:enteredPostalCode,
+    });
   };
+   {/* we use string literals below because we want to use two different classes, control and invalid.We only use invalid if the name is not valid */}
+      {/* if the name is valid donot add any class otherwise add a class */}
+
+  const nameControlClasses = `${classes.control} ${
+    formInputValidity.name ? "" : classes.invalid
+  }`;
+  const streetControlClasses = `${classes.control} ${
+    formInputValidity.street ? "" : classes.invalid
+  }`;
+  const postalCodeControlClasses=`${classes.control} ${formInputValidity.postalCode ? '' : classes.invalid}`;
+  const cityControlClasses=`${classes.control} ${formInputValidity.city ? '' : classes.invalid}`
   return (
     <form className={classes.form} onSubmit={confirmHandler}>
-    {/* we use string literals below because we want to use two different classes, control and invalid.We only use invalid if the name is not valid */}
-    {/* if the name is valid donot add any class otherwise add a class */}
-      <div className={`${classes.control} ${formInputValidity.name ? '' : classes.invalid}`}>
+     
+      <div className={nameControlClasses}>
         <label htmlFor="name">Your name</label>
         {/* id below must match the html for value above */}
         <input type="text" id="name" ref={nameInputRef} />
         {/* here we can now throw error message if it is false */}
         {!formInputValidity.name && <p>please enter a valid name</p>}
       </div>
-      <div className={classes.control}>
+      <div className={streetControlClasses}>
         <label htmlFor="street">Street</label>
         {/* id below must match the html for value above */}
         <input type="text" id="street" ref={streetInputRef} />
-          {/* here we can now throw error message if it is false */}
+        {/* here we can now throw error message if it is false */}
         {!formInputValidity.street && <p>please enter a valid street</p>}
       </div>
-      <div className={classes.control}>
+      <div className={postalCodeControlClasses}>
         <label htmlFor="postal">Postal code</label>
         {/* id below must match the html for value above */}
         <input type="text" id="postal" ref={postalInputRef} />
-          {/* here we can now throw error message if it is false */}
-        {!formInputValidity.postalCode && <p>please enter a valid postalCode</p>}
+        {/* here we can now throw error message if it is false */}
+        {!formInputValidity.postalCode && (
+          <p>please enter a valid postalCode</p>
+        )}
       </div>
-      <div className={classes.control}>
+      <div className={cityControlClasses}>
         <label htmlFor="city">city</label>
         {/* id below must match the html for value above */}
         <input type="text" id="city" ref={cityInputRef} />
-          {/* here we can now throw error message if it is false */}
+        {/* here we can now throw error message if it is false */}
         {!formInputValidity.city && <p>please enter a valid city</p>}
       </div>
       <div className={classes.actions}>
